@@ -13,6 +13,7 @@
 | File | Topic | Status |
 |------|-------|--------|
 | [MD-102-Enrollment-Methods.md](./MD-102-Enrollment-Methods.md) | Enrollment methods across Windows, iOS, Android — all Autopilot modes, ADE, bulk enrollment, and decision frameworks | ✅ Complete |
+| [MD-102-Compliance-Conditional-Access.md](./MD-102-Compliance-Conditional-Access.md) | Compliance policies, actions for non-compliance, Conditional Access signals and grant controls, Named Locations | ✅ Complete |
 
 *More notes will be added as study progresses through this domain.*
 
