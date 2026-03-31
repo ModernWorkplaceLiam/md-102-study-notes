@@ -10,480 +10,499 @@
 4. [Advanced Analytics](#4-advanced-analytics)
 5. [Microsoft Tunnel for MAM](#5-microsoft-tunnel-for-mam)
 6. [Cloud PKI](#6-cloud-pki)
-7. [Quick Comparison — All Five Features](#7-quick-comparison--all-five-features)
-8. [Exam Scenario Practice](#8-exam-scenario-practice)
-9. [Key Terms Glossary](#9-key-terms-glossary)
+7. [Exam Scenario Practice](#7-exam-scenario-practice)
+8. [Key Terms Glossary](#8-key-terms-glossary)
 
 ---
 
 ## 1. Core Concept — What Is the Intune Suite?
 
-The Intune Suite is a collection of **premium add-on capabilities** built on top
-of core Microsoft Intune. Each feature solves a specific problem that standard
-Intune licensing does not address.
+The Intune Suite is a collection of **premium add-on capabilities** that sit on
+top of core Microsoft Intune. They are not included in standard Intune licensing
+and must be purchased separately — either individually or as a bundle.
 
-```
-Core Intune          →   Enrol devices, push policies, deploy apps, compliance
-Intune Suite add-ons →   Advanced scenarios: privilege management, remote support,
-                         deep analytics, BYOD VPN, cloud certificates
-```
-
-> ⚠️ **Exam note:**
-> The exam tests what each feature does and which problem it solves —
-> not licensing costs or pricing tiers.
-> All five are premium features not included in standard Intune.
-
-### The Five Features at a Glance
+### The Five Capabilities
 
 | Feature | Problem it solves | Who benefits |
 |---|---|---|
-| EPM | Standard users needing temporary admin rights | End users + IT security |
-| Remote Help | IT supporting remote users without physical access | IT helpdesk |
-| Advanced Analytics | Understanding device health and performance at scale | IT operations |
-| Tunnel for MAM | Secure corporate access from unenrolled BYOD devices | Remote / BYOD workers |
-| Cloud PKI | Certificate issuance without on-premises CA server | Cloud-first organisations |
+| **EPM** | Standard users need temporary admin rights | End users + IT |
+| **Remote Help** | IT needs to see/control remote devices | IT helpdesk |
+| **Advanced Analytics** | IT needs deeper device health insights | IT management |
+| **Tunnel for MAM** | BYOD users need secure app access without enrollment | End users |
+| **Cloud PKI** | Cloud devices need certificates without on-prem CA | IT infrastructure |
+
+> ⚠️ **Exam note:**
+> The exam tests what each feature does and which scenario it solves.
+> It does not test pricing or specific licensing SKUs.
 
 ---
 
 ## 2. Endpoint Privilege Management (EPM)
 
-### The Problem
-Standard users run without admin rights — a security best practice.
-But occasionally they need elevated privileges for a specific task
-(installing a driver, running a specialist tool) without IT granting
-permanent admin access.
+### The Problem It Solves
 
-### The Solution
-EPM allows standard users to run specific applications with elevated
-(admin) privileges — temporarily, for that task only, with full audit logging.
+Standard users run without admin rights for security — but occasionally need
+elevated privileges for specific tasks. The traditional solutions are bad:
 
 ```
-Security principle:  Least privilege
-                     Users get minimum rights needed
-                     Only when needed
-                     Only for that specific task
-                     Elevation is temporary and audited
+Give permanent admin rights  →  Too risky — user can do anything
+Call IT for every elevation  →  Slow, expensive, frustrating
+```
+
+EPM provides **just-in-time, task-specific elevation** — the minimum privilege
+needed, only when needed, only for that specific application.
+
+### The Security Principle
+
+```
+Least privilege  →  Users get only the rights needed for their job
+Just-in-time     →  Elevation is temporary, not permanent
+Audited          →  Every elevation is logged — who, what, when, why
 ```
 
 ### The Three Elevation Types
 
 #### Type 1 — Automatic Elevation
 ```
-What happens:   IT pre-approves specific apps via EPM policy
-                App runs with elevated rights automatically
-                No user action or prompt required
+How it works:   IT pre-approves specific apps via EPM policy
+                App runs elevated automatically — no user prompt
+User experience: Seamless — user doesn't notice the elevation
 Best for:       Known, trusted apps that always need elevation
-                e.g. a specific corporate tool that requires admin rights
-User experience: Seamless — elevation is invisible to the user
+Example:        Corporate software that always requires admin to run
 ```
 
-#### Type 2 — User Confirmed
+#### Type 2 — User Confirmed Elevation
 ```
-What happens:   App is pre-approved by IT
-                User must explicitly confirm the elevation via a prompt
-                May require business justification text
-Best for:       Apps that need elevation but IT wants user awareness
-                e.g. software update tools
-User experience: User sees a confirmation prompt before elevation proceeds
-```
-
-#### Type 3 — Support Approved
-```
-What happens:   User requests elevation for an app NOT on the pre-approved list
-                User submits request with business justification
-                IT helpdesk reviews and approves or denies the request
-                Elevation is granted only after IT approval
-Best for:       One-off or unusual elevation requirements
-                e.g. installing a USB driver for specialist lab equipment
-User experience: User submits request → waits for IT approval → proceeds
+How it works:   App is pre-approved but user must confirm each time
+                User sees a prompt — must acknowledge before proceeding
+                Business justification may be required
+User experience: One extra click — minimal friction
+Best for:       Apps that need elevation occasionally, not always
+Example:        Driver installer that IT has approved but wants user awareness
 ```
 
-### EPM vs PIM — Important Distinction
+#### Type 3 — Support Approved Elevation
+```
+How it works:   User requests elevation for an app NOT on the approved list
+                Request goes to IT helpdesk for review
+                User provides business justification
+                IT approves or denies — user gets a time-limited elevation
+User experience: Requires helpdesk interaction — adds delay
+Best for:       One-off, unanticipated elevation needs
+Example:        Specialist lab equipment USB driver — one-time installation
+```
+
+### EPM vs PIM — The Distinction
 
 ```
 EPM (Endpoint Privilege Management)
-    →  Just-in-time APP elevation
-    →  Standard user running ONE app as admin on their device
-    →  Managed through Intune
+→  Just-in-time APP elevation
+→  Standard user running one specific app with admin rights
+→  Lives in: Windows device, managed by Intune
 
 PIM (Privileged Identity Management)
-    →  Just-in-time ROLE elevation
-    →  IT admin gaining temporary Entra ID admin rights
-    →  Managed through Entra ID
-
-Same security principle (least privilege, JIT) — different scope and layer.
+→  Just-in-time ROLE elevation
+→  IT admin gaining temporary Entra ID admin role
+→  Lives in: Entra ID, manages admin roles
 ```
 
-### EPM Exam Scenario Pattern
+Same security principle — different scope and layer.
+
+### Exam Scenario Pattern for EPM
+
 ```
-Trigger words:  "standard user", "one-off", "without permanent admin",
-                "specific app", "least privilege"
-Answer:         Endpoint Privilege Management (EPM)
-Elevation type: Match to scenario —
-                Pre-approved + automatic    →  Automatic elevation
-                Pre-approved + user prompt  →  User confirmed
-                Not pre-approved + IT reviews →  Support approved
+Trigger phrases in exam questions:
+- "standard user needs to install..."
+- "user needs admin rights just for..."
+- "without giving permanent admin access..."
+- "least privilege..."
+
+Answer structure:
+→  Feature: Endpoint Privilege Management (EPM)
+→  Elevation type: depends on whether app is pre-approved or not
+   Pre-approved app   →  Automatic or User Confirmed
+   Unapproved app     →  Support Approved
 ```
 
 ---
 
 ## 3. Remote Help
 
-### The Problem
-Remote workers have technical issues IT cannot fix without physical access.
-Traditional remote tools lack Intune integration, compliance checking,
-and the controlled consent model required by modern IT security policies.
+### The Problem It Solves
 
-### The Solution
-Remote Help is an Intune-integrated remote assistance tool that allows
-IT to view or control an end user's device — with full user consent
-and audit logging.
+IT needs to troubleshoot and fix issues on remote devices — without the user
+having to physically bring the device in or describe what they're seeing.
+
+### How It Works
+
+```
+Prerequisites:
+  Both IT admin AND end user must have Remote Help app installed
+  Session is always user-initiated and user-consented
+  IT cannot silently connect without user knowledge
+
+Session flow:
+  User opens Remote Help → shares a session code → IT admin joins
+  IT selects session mode → troubleshooting begins
+```
 
 ### The Two Session Modes
 
 #### View Only
 ```
 What IT can do:   Watch the user's screen in real time
-                  See exactly what the user is doing step by step
-                  Diagnose the issue without touching the device
-User control:     User retains full control of mouse and keyboard
-Best for:         Diagnosing user behaviour issues
-                  Understanding what the user is experiencing
-                  Privacy-sensitive situations
+What IT cannot:   Control mouse or keyboard
+Best for:         Diagnosing issues by watching the user reproduce them
+                  Understanding the user's workflow before intervening
+Privacy:          User retains full control of their device
 ```
 
 #### Full Control
 ```
-What IT can do:   Take control of mouse and keyboard
-                  Run Command Prompt, PowerShell as admin
-                  Install or uninstall software
-                  Access admin panels and settings
-User control:     User can see everything IT does — transparent
-Best for:         Actively fixing issues — broken profiles, software,
-                  configuration problems
+What IT can do:   Take over mouse and keyboard completely
+                  Run command prompt, install/uninstall software
+                  Access admin panels and system settings
+                  Elevate their session for admin tasks
+Best for:         Actively fixing issues once diagnosed
+Privacy:          User can see everything IT is doing
 ```
 
-### Typical Session Flow
+### The Recommended Sequence
+
 ```
-Step 1  →  User calls helpdesk with issue
-Step 2  →  IT initiates Remote Help session — user receives consent prompt
-Step 3  →  User accepts — session begins in View Only mode
-Step 4  →  IT diagnoses the issue by watching the user
-Step 5  →  IT switches to Full Control to fix the problem
-Step 6  →  Session ends — full audit log recorded
+Step 1  →  View only: watch user reproduce the issue — diagnose the cause
+Step 2  →  Full control: IT takes over to implement the fix
+Step 3  →  View only: hand back to user — confirm issue resolved
 ```
 
 ### Key Exam Facts
+
 ```
-✅ Both IT admin AND end user must have Remote Help app installed
-✅ Session is always user-initiated and user-consented
-✅ IT cannot silently connect — user must approve every session
-✅ IT can elevate their session during Full Control to run admin tasks
-✅ Full audit trail of every session — who connected, when, what was done
-✅ Works with Intune-enrolled devices — compliance status visible to IT
+✅ Both IT and user need Remote Help app installed
+✅ Session is user-consented — not silent
+✅ Available for: Windows, macOS, iOS, Android
+✅ IT can elevate within a full control session for admin tasks
+✅ Sessions are audited — logged in Intune
+⚠️ Not the same as other remote tools (TeamViewer, RDP) — Intune-integrated
 ```
 
 ---
 
 ## 4. Advanced Analytics
 
-### The Problem
-Standard Intune reporting shows compliance status and policy assignment.
-It doesn't explain WHY devices are slow, crashing, or generating helpdesk
-tickets — or spot patterns across manufacturers, models and firmware versions.
+### The Problem It Solves
 
-### The Solution
-Advanced Analytics provides deep device health intelligence — battery health
-scores, startup performance, app reliability, crash analysis — all surfaced
-as actionable insights rather than raw data.
+Standard Intune reporting shows compliance status and enrollment data.
+Advanced Analytics provides **proactive device health intelligence** — identifying
+problems before they become helpdesk calls.
 
-### What Advanced Analytics Provides
+### What It Provides
 
 ```
-Device health scores      →  Overall health rating per device
-Startup performance       →  Boot time analysis — identify slow devices
-Battery health            →  Battery degradation tracking — predict failures
-App reliability           →  Crash frequency and error analysis per application
-Resource performance      →  CPU, RAM, storage performance trends
-Manufacturer / model view →  Spot patterns across hardware makes and models
-Firmware analysis         →  Identify firmware versions causing issues
+Device health scores     →  Overall health rating per device and fleet
+Startup performance      →  Boot time analysis — which devices are slow to start
+Battery health           →  Battery degradation tracking across the fleet
+App reliability          →  Crash rates per application, per device model
+Resource performance     →  CPU, RAM, storage utilisation trends
+Anomaly detection        →  Flags devices behaving unusually vs their baseline
 ```
 
-### Device Queries Using KQL
+### Breakdown Dimensions
 
-KQL = **Kusto Query Language** — the same query language used in
-Microsoft Sentinel and Azure Log Analytics.
-
+Advanced Analytics can segment insights by:
 ```
-Pre-built dashboards   →  Answer known questions with fixed reports
-KQL device queries     →  Answer YOUR specific questions of the data
-```
-
-**Why KQL matters:**
-Pre-built reports show average startup time across all devices.
-KQL lets you ask: *"Show me all Dell Latitude laptops running firmware
-version X that have had startup times over 60 seconds in the last 30 days."*
-
-**Exam-relevant KQL example:**
-```
-DeviceHealth
-| where Manufacturer == "Dell"
-| where Model contains "Latitude"
-| where StartupTime > 60
-| where ReportDate > ago(30d)
-| summarize count() by FirmwareVersion
+Manufacturer    →  Dell vs HP vs Lenovo performance comparison
+Model           →  Specific model lines with performance issues
+Firmware        →  Firmware versions correlated with problems
+OS version      →  Build-level performance differences
 ```
 
-> ⚠️ **Exam note:**
-> You don't need to write KQL for the exam — you need to know that
-> KQL device queries exist within Advanced Analytics and what they enable:
-> custom, flexible querying of device telemetry beyond pre-built reports.
+### Device Queries with KQL
+
+KQL = **Kusto Query Language** — the same language used in Microsoft Sentinel
+and Azure Log Analytics.
+
+```
+What standard dashboards give you:   Pre-built reports with fixed parameters
+What KQL device queries give you:    Custom questions against raw device telemetry
+```
+
+#### KQL Query Examples
+
+```
+Find all Dell devices with camera issues in last 30 days:
+→  Filter: Manufacturer = Dell
+   Filter: ComponentName = Camera
+   Filter: TimeRange = last 30 days
+
+Find devices with startup time > 60 seconds on Windows 11 23H2:
+→  Filter: OSBuild = 22631
+   Filter: StartupDurationSeconds > 60
+
+Find all devices with battery health below 50%:
+→  Filter: BatteryHealthPercentage < 50
+```
+
+### Exam Scenario Pattern for Advanced Analytics
+
+```
+Trigger phrases:
+- "IT wants to identify which devices are causing most helpdesk calls"
+- "find all [manufacturer] devices with [specific issue]"
+- "proactive health monitoring..."
+- "custom query against device data..."
+
+Answer:
+→  Feature: Advanced Analytics
+→  Specific capability: KQL device queries (for custom, specific queries)
+                        or Advanced Analytics dashboards (for overview)
+```
 
 ---
 
 ## 5. Microsoft Tunnel for MAM
 
-### The Problem
-BYOD users need secure access to corporate resources (SharePoint, Teams,
-internal apps) from personal devices. Standard VPN routes ALL device traffic
-through the corporate network — including personal apps — which is both
-a privacy concern and a bandwidth overhead.
+### The Problem It Solves
 
-Additionally, some users haven't enrolled their devices in Intune at all —
-they only use managed apps (MAM without enrollment). Traditional VPN
-requires full device enrollment to function.
+Standard VPN requires full device enrollment in Intune.
+BYOD users on personal devices often cannot or will not enroll their devices.
+Yet they still need secure access to corporate resources like SharePoint and Teams.
+
+Additionally — routing ALL traffic through a corporate VPN on a personal device
+is a privacy concern. Personal Netflix and Instagram should not go through the
+company network.
 
 ### The Solution
-Microsoft Tunnel for MAM provides a **per-app VPN tunnel** that:
-- Routes only work app traffic through the corporate network
-- Leaves personal app traffic on the user's normal internet connection
-- Works on **unenrolled devices** — no MDM enrollment required
+
+**Per-app VPN tunnel** that works on **unenrolled devices**.
+
+```
+Work apps (Outlook, Teams, SharePoint)  →  Traffic routes through Tunnel
+Personal apps (Netflix, Instagram)      →  Traffic bypasses Tunnel entirely
+```
+
+### MAM vs MDM
+
+```
+MDM (Mobile Device Management)   →  Full device enrollment required
+                                     IT manages the whole device
+
+MAM (Mobile Application Management) →  No enrollment required
+                                        IT manages only the work apps
+                                        Tunnel for MAM uses this approach
+```
 
 ### How It Works
 
 ```
-Without Tunnel for MAM:
-Personal device → ALL traffic → Corporate VPN → Internet
-(personal Netflix + work SharePoint both route through company network)
+Microsoft Tunnel Gateway
+    └── Deployed by IT in Azure or on-premises
+    └── Acts as the VPN endpoint for work app traffic
 
-With Tunnel for MAM:
-Personal device → Work apps (Teams, SharePoint) → Tunnel → Corporate network
-                → Personal apps (Netflix, Instagram) → Normal internet
-(split at app level — not device level)
+Intune App Protection Policy
+    └── Configured to route specific apps through Tunnel
+    └── Applied to unenrolled BYOD devices via MAM
+
+User experience
+    └── Work apps automatically use Tunnel — transparent to user
+    └── Personal apps unaffected — normal internet connection
 ```
 
 ### Key Exam Facts
 
 ```
-✅ Works on UNENROLLED devices — this is the key differentiator
-✅ Per-app tunnel — only Intune-managed apps use it
-✅ Personal apps bypass it entirely — privacy preserved
-✅ Requires Microsoft Tunnel Gateway (can be on-prem or in Azure)
-✅ Configured via App Protection Policies in Intune
-✅ Supported on iOS and Android
+✅ Works on UNENROLLED devices — key differentiator
+✅ Per-app tunnel — not whole-device VPN
+✅ Requires Microsoft Tunnel Gateway deployment
+✅ Supported on: iOS and Android (not Windows)
+✅ Works alongside App Protection Policies (MAM)
+⚠️ Not the same as standard Intune VPN profile — that requires enrollment
 ```
-
-### MAM vs MDM — The Context
-
-```
-MDM (Mobile Device Management)  →  Device enrolled, Intune manages the whole device
-MAM (Mobile Application Management) →  Apps managed, device NOT enrolled
-Tunnel for MAM                  →  VPN that works with MAM — no enrollment needed
-```
-
-> ⚠️ **Exam scenario trigger:**
-> "BYOD", "unenrolled", "per-app VPN", "personal device secure access"
-> → Answer: Microsoft Tunnel for MAM
 
 ---
 
 ## 6. Cloud PKI
 
-### The Problem
-Device certificates prove identity — used for Wi-Fi authentication, VPN
-access, and device identity verification. Certificates are issued by a
-Certificate Authority (CA) server.
+### The Problem It Solves
 
-In traditional environments, the CA server is on-premises. Cloud-only or
-remote Intune-managed devices have **no line of sight** to the on-premises
-CA — they can't request or receive certificates.
+Many enterprise services authenticate devices using **digital certificates**
+rather than passwords — Wi-Fi networks, VPNs, internal web services.
+
+Traditionally, a **Certificate Authority (CA) server** on-premises issues these
+certificates. But cloud-only and remote devices have no line of sight to
+on-premises infrastructure — they can't reach the CA server to get a certificate.
 
 ### The Solution
-Cloud PKI is a fully cloud-based Certificate Authority managed through
-Intune. It issues certificates to any Intune-managed device — regardless
-of whether that device ever connects to the corporate network.
 
-### How It Works
+Move the Certificate Authority to the cloud — **Cloud PKI** is a fully
+cloud-based CA managed through Intune.
 
 ```
-Traditional (on-premises CA):
-Device → requests certificate → on-prem CA server
-Problem: remote / cloud devices can't reach the on-prem server
-
-Cloud PKI:
-Device → requests certificate → Cloud PKI (in Azure / Intune)
-Result: any Intune-managed device gets certificates automatically
-        No network line-of-sight required
-        No on-premises server to maintain
+On-premises CA                          Cloud PKI
+──────────────────────────────          ──────────────────────────────
+Physical server on corporate network    Hosted in Microsoft cloud
+Devices must reach the network          Any Intune device can get a cert
+Manual certificate management           Automated via Intune policies
+Infrastructure to maintain              No server to manage
+Cannot reach remote/cloud devices       Reaches any enrolled device
 ```
 
-### Use Cases for Device Certificates
+### What Certificates Are Used For
 
 ```
-Wi-Fi authentication    →  Certificate proves device identity to Wi-Fi controller
-                           No username/password needed for corporate Wi-Fi
-VPN authentication      →  Certificate-based VPN — more secure than passwords
-Device identity         →  Conditional Access can require a valid certificate
-SCEP / PKCS profiles    →  Intune delivers certificates via these profile types
+Wi-Fi authentication     →  Device proves identity to join corporate Wi-Fi
+                             No password needed — certificate is the credential
+VPN authentication       →  Secure tunnel established using certificate identity
+Internal web services    →  HTTPS authentication to internal sites
+Device identity          →  Proves the device is trusted and managed
+```
+
+### How It Works with Intune
+
+```
+Cloud PKI configured in Intune admin centre
+        │
+        ▼
+Certificate profile created in Intune
+(SCEP or PKCS profile — delivers cert to device)
+        │
+        ▼
+Profile assigned to device group
+        │
+        ▼
+Device receives certificate automatically
+No manual request — fully automated
+        │
+        ▼
+Device uses certificate to authenticate
+to Wi-Fi, VPN, or other services
 ```
 
 ### Key Exam Facts
 
 ```
 ✅ Replaces on-premises CA server entirely
-✅ Fully managed through Microsoft Intune admin centre
-✅ Issues certificates to Intune-managed devices automatically
-✅ Supports SCEP and PKCS certificate delivery via Intune profiles
-✅ Removes dependency on corporate network connectivity for cert issuance
-✅ PKI = Public Key Infrastructure — the system for managing certificates
+✅ Fully managed through Intune — no separate infrastructure
+✅ Certificates delivered via SCEP or PKCS certificate profiles
+✅ Works with: Wi-Fi profiles, VPN profiles, device identity
+⚠️ Exam trigger: "no on-premises infrastructure" + "certificates" = Cloud PKI
 ```
 
-> ⚠️ **Exam scenario trigger:**
-> "No on-premises CA", "cloud-only", "certificates without infrastructure",
-> "remote devices need certificates"
-> → Answer: Cloud PKI
-
 ---
 
-## 7. Quick Comparison — All Five Features
-
-| Feature | Trigger words in exam scenarios | Key fact |
-|---|---|---|
-| **EPM** | "standard user", "temporary elevation", "one-off admin task", "least privilege" | Three types: automatic, user confirmed, support approved |
-| **Remote Help** | "remote support", "take control", "see user's screen", "helpdesk" | Two modes: view only + full control. User must consent |
-| **Advanced Analytics** | "device health", "performance patterns", "slow devices", "battery", "KQL" | KQL enables custom queries beyond pre-built dashboards |
-| **Tunnel for MAM** | "BYOD", "unenrolled", "per-app VPN", "personal device" | Only work apps tunnel — personal apps bypass it |
-| **Cloud PKI** | "certificates", "no on-prem CA", "cloud-only", "line of sight" | Cloud CA — any Intune device gets certs, no network needed |
-
----
-
-## 8. Exam Scenario Practice
+## 7. Exam Scenario Practice
 
 ### Scenario 1
 > A standard user needs to install a USB driver for specialist lab equipment.
-> It's a one-off requirement. The driver isn't on the pre-approved app list.
-> IT doesn't want to give permanent admin rights.
+> IT doesn't want to give permanent admin rights. The driver isn't on the
+> pre-approved list. Which EPM elevation type applies?
 
-**Answer:** **EPM — support approved elevation.** User submits request with
-business justification. IT helpdesk reviews and approves. Elevation is
-granted temporarily for that specific installer only.
+**Answer:** **Support approved elevation**. User submits elevation request with
+business justification. IT helpdesk reviews and approves a time-limited elevation
+for that specific installer. No permanent admin rights granted.
 
 ---
 
 ### Scenario 2
-> A remote worker in another city has a broken Outlook profile. IT needs to
-> first see what happens when she clicks send, then fix the mail settings directly.
+> A remote worker in Scotland has a broken Outlook profile. IT needs to first
+> watch her reproduce the sending issue, then fix the mail profile settings.
+> Which feature and session modes are used?
 
-**Answer:** **Remote Help** — starting in **view only** mode to observe the
-user's behaviour and diagnose the issue, then switching to **full control**
-to fix the mail profile settings directly.
+**Answer:** **Remote Help**. IT starts in **view only** mode to watch the user
+reproduce the issue and diagnose the cause. IT then switches to **full control**
+to take over keyboard and mouse and fix the Outlook profile settings.
 
 ---
 
 ### Scenario 3
-> The helpdesk is receiving high volumes of slow startup complaints from Dell
-> Latitude users. The IT manager suspects a specific firmware version.
-> They want to confirm the pattern across all Dell devices before escalating.
+> IT notices high helpdesk call volumes about slow startup on Dell Latitude
+> laptops running a specific firmware. They want to confirm the pattern across
+> all 200 Dell devices before escalating to Dell support.
 
-**Answer:** **Advanced Analytics** using **KQL device queries** — query device
-telemetry filtered to Dell Latitude devices, grouping slow startup events
-by firmware version to confirm the pattern.
+**Answer:** **Advanced Analytics** using **KQL device queries**. Query filters
+on manufacturer = Dell, model = Latitude, firmware version, and startup
+performance metrics — confirming the pattern with data before escalation.
 
 ---
 
 ### Scenario 4
-> 300 BYOD Android users access SharePoint and Teams from personal phones.
-> IT wants work app traffic to route through the corporate network securely.
-> Personal apps must not be affected. Device enrollment is not required.
+> 300 employees use personal Android phones to access Teams and SharePoint.
+> IT wants work app traffic routed securely through the corporate network.
+> Personal apps should use normal internet. Device enrollment is not required.
 
-**Answer:** **Microsoft Tunnel for MAM** — per-app VPN tunnel routes only
-Intune-managed work apps through the corporate network. Personal apps
-use the user's normal internet connection. No device enrollment needed.
+**Answer:** **Microsoft Tunnel for MAM**. Per-app VPN routes only work app
+traffic through the Tunnel Gateway. Personal apps bypass it entirely.
+No device enrollment needed — works via MAM App Protection Policies.
 
 ---
 
 ### Scenario 5
-> A company is going fully cloud-based with no on-premises infrastructure.
-> They need devices to receive certificates for Wi-Fi authentication,
-> but have no on-premises CA server.
+> A company is going fully cloud-native. All devices are Intune-managed with
+> no on-premises infrastructure. They need devices to authenticate to corporate
+> Wi-Fi using certificates instead of passwords — but have no on-premises CA.
 
-**Answer:** **Cloud PKI** — cloud-based Certificate Authority managed through
-Intune. Issues certificates to any Intune-managed device without requiring
-network line-of-sight to an on-premises CA server.
+**Answer:** **Cloud PKI**. Cloud-based Certificate Authority managed through
+Intune. Issues certificates to enrolled devices automatically via SCEP/PKCS
+certificate profiles. No on-premises CA server required.
 
 ---
 
-## 9. Key Terms Glossary
+## 8. Key Terms Glossary
 
 | Term | Plain English Definition |
 |---|---|
-| **Intune Suite** | Premium add-on bundle for Microsoft Intune — advanced capabilities beyond core licensing |
-| **EPM** | Endpoint Privilege Management — temporary app elevation for standard users |
-| **Least privilege** | Security principle — users get minimum rights needed, only when needed |
-| **Automatic elevation** | EPM type — pre-approved app elevates silently, no user prompt |
-| **User confirmed** | EPM type — pre-approved app, user must confirm elevation via prompt |
-| **Support approved** | EPM type — unapproved app, IT helpdesk reviews and approves request |
-| **PIM** | Privileged Identity Management — JIT role elevation for IT admins in Entra ID |
-| **Remote Help** | Intune-integrated remote assistance tool — view only or full control |
-| **View only** | Remote Help mode — IT watches user's screen, user retains control |
-| **Full control** | Remote Help mode — IT takes mouse and keyboard to fix issues |
-| **Advanced Analytics** | Intune add-on providing deep device health and performance intelligence |
+| **Intune Suite** | Premium add-on bundle of five advanced Intune capabilities |
+| **EPM** | Endpoint Privilege Management — just-in-time app elevation for standard users |
+| **Least privilege** | Security principle — users get only the minimum rights needed |
+| **Automatic elevation** | EPM type — pre-approved app elevates without user prompt |
+| **User confirmed elevation** | EPM type — pre-approved app requires user to acknowledge prompt |
+| **Support approved elevation** | EPM type — unapproved app requires helpdesk review and approval |
+| **PIM** | Privileged Identity Management — just-in-time role elevation in Entra ID (different from EPM) |
+| **Remote Help** | Intune-integrated remote assistance tool — view only and full control modes |
+| **View only** | Remote Help mode — IT watches screen, user retains control |
+| **Full control** | Remote Help mode — IT takes over mouse and keyboard |
+| **Advanced Analytics** | Premium Intune reporting — device health scores, performance insights |
 | **KQL** | Kusto Query Language — used for custom device queries in Advanced Analytics |
-| **Tunnel for MAM** | Per-app VPN for unenrolled BYOD devices — work apps only |
+| **Tunnel for MAM** | Per-app VPN for unenrolled BYOD devices — routes only work app traffic |
 | **MAM** | Mobile Application Management — manages apps without device enrollment |
-| **Per-app VPN** | VPN tunnel that applies only to specific managed apps — not all device traffic |
-| **Cloud PKI** | Cloud-based Certificate Authority managed through Intune |
-| **PKI** | Public Key Infrastructure — system for issuing and managing digital certificates |
-| **CA** | Certificate Authority — server that issues digital certificates |
-| **SCEP** | Simple Certificate Enrollment Protocol — method Intune uses to deliver certificates |
-| **Line of sight** | Network connectivity between a device and a server — required for on-prem CA |
+| **MDM** | Mobile Device Management — full device management requiring enrollment |
+| **Per-app VPN** | VPN that only applies to specific apps — not all device traffic |
+| **Cloud PKI** | Cloud-based Certificate Authority — issues device certs without on-prem server |
+| **CA** | Certificate Authority — system that issues and manages digital certificates |
+| **SCEP** | Simple Certificate Enrollment Protocol — automated cert delivery method |
+| **PKCS** | Public Key Cryptography Standards — certificate format used in Intune |
+| **Certificate profile** | Intune profile that delivers a certificate to a device |
 
 ---
 
 ## Quick Revision Card
 
 ```
-EPM — ENDPOINT PRIVILEGE MANAGEMENT
-├── Solves: standard users needing one-off admin rights
-├── Automatic: pre-approved, silent elevation
-├── User confirmed: pre-approved, user must confirm
-├── Support approved: not pre-approved, IT reviews request
-└── Principle: least privilege — temporary, audited, specific
+FIVE INTUNE SUITE FEATURES
+├── EPM           →  Standard user needs temp admin rights
+│   ├── Automatic elevation      Pre-approved, silent
+│   ├── User confirmed           Pre-approved, user confirms
+│   └── Support approved         Not pre-approved, helpdesk reviews
+│
+├── Remote Help   →  IT remotely assists user devices
+│   ├── View only               Watch and diagnose
+│   └── Full control            Take over and fix
+│
+├── Advanced Analytics  →  Proactive device health intelligence
+│   └── KQL queries            Custom questions against device telemetry
+│
+├── Tunnel for MAM  →  Per-app VPN for UNENROLLED BYOD devices
+│   ├── No enrollment needed
+│   └── Only work apps tunnel — personal apps bypass
+│
+└── Cloud PKI  →  Cloud CA — certificates without on-prem server
+    ├── Replaces on-premises Certificate Authority
+    └── Automated cert delivery via SCEP/PKCS profiles
 
-REMOTE HELP
-├── Solves: IT supporting remote users without physical access
-├── View only: IT watches — user retains control
-├── Full control: IT takes mouse + keyboard
-├── User must consent to every session
-└── Both parties need the Remote Help app installed
-
-ADVANCED ANALYTICS
-├── Solves: understanding WHY devices underperform at scale
-├── Provides: health scores, startup, battery, app crashes
-├── KQL queries: custom questions beyond pre-built reports
-└── Example: all Dell Latitude devices with slow startup in 30 days
-
-TUNNEL FOR MAM
-├── Solves: secure BYOD access without device enrollment
-├── Per-app: only work apps tunnel — personal apps bypass
-├── No enrollment required — MAM only
-└── Trigger words: BYOD, unenrolled, per-app VPN
-
-CLOUD PKI
-├── Solves: certificate issuance without on-prem CA server
-├── Cloud CA: issues certs to any Intune device
-├── No line of sight needed to corporate network
-└── Use cases: Wi-Fi auth, VPN auth, device identity
+KEY DISTINCTIONS
+├── EPM vs PIM:    EPM = app elevation | PIM = role elevation
+├── MAM vs MDM:    MAM = app management only | MDM = full device
+└── Tunnel for MAM vs VPN profile: MAM = no enrollment | VPN = enrollment required
 ```
 
 ---
