@@ -557,3 +557,95 @@ APP CONFIGURATION POLICIES
 
 *MD-102 Study Notes | Domain 3: Manage Applications*
 *Last updated: 2026*
+
+---
+
+## 11. Conditional Access for App Protection Policies
+
+### The BYOD Access Problem
+
+Standard Conditional Access can require a **compliant device** before granting
+access. But BYOD devices are personal — they'll never be enrolled or compliant.
+
+```
+Enrolled corporate device  →  CA requires compliant device → works
+BYOD personal device       →  CA requires compliant device → always blocked
+```
+
+A different approach is needed for BYOD — one that protects data without
+requiring device enrollment.
+
+### The Solution — "Require App Protection Policy" Grant Control
+
+Conditional Access has a specific grant control for MAM scenarios:
+
+```
+Standard grant control:
+IF device = compliant THEN grant access
+
+APP grant control:
+IF app protection policy IS applied THEN grant access
+```
+
+### How It Works
+
+```
+BYOD user attempts to access SharePoint
+        │
+        ▼
+Conditional Access evaluates signals
+        │
+        ▼
+Device not enrolled — cannot be compliant
+        │
+        ▼
+CA checks: is an App Protection Policy applied to the app?
+        │
+        ├── YES (via SharePoint app) → access GRANTED
+        │                              data protected by APP
+        └── NO (via Safari/Chrome)  → access BLOCKED
+                                      no protection in place
+```
+
+### The Two CA Grant Controls Used Together
+
+```
+1. Require approved client app
+   Only specific Microsoft apps are permitted
+   e.g. Microsoft SharePoint app — not Safari, not Chrome
+
+2. Require app protection policy
+   APP must be applied to the approved app
+   Ensures data protection is active before access is granted
+```
+
+### The Complete BYOD Security Chain
+
+```
+Conditional Access     →  Enforces WHICH app can be used
+App Protection Policy  →  Enforces WHAT data can do inside the app
+Together               →  BYOD users get access AND company data is protected
+```
+
+### Exam Scenario Pattern
+
+> **Trigger:** "BYOD users need access to [resource] — only through the
+> managed app — blocked via browser — no enrollment required"
+>
+> **Answer:** Two configurations:
+> 1. App Protection Policy on the target app
+> 2. Conditional Access policy with:
+>    - Approved client app grant control
+>    - Require app protection policy grant control
+
+### Quick Reference
+
+```
+Device enrolled + compliant   →  Standard CA compliance grant control
+BYOD + no enrollment          →  CA "require app protection policy" grant control
+Browser access attempt        →  Blocked — not an approved client app
+Managed app + APP applied     →  Granted — full MAM protection active
+```
+
+---
+*Section added: Conditional Access for App Protection Policies*
